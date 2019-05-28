@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { App, Login, Register } from '../components';
+import { App, Login, Register, Spinner } from '../components';
 
 import { routes } from './routes';
 import firebase from '../firebase';
@@ -12,16 +12,23 @@ class Root extends Component {
   state = {};
 
   componentDidMount() {
+    const { setUser, clearUser, history } = this.props;
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.props.setUser(user);
-        this.props.history.push('/');
+        setUser(user);
+        history.push('/');
+      } else {
+        history.push('/login');
+        clearUser();
       }
     });
   }
 
   render() {
-    return (
+    const { isLoading } = this.props;
+    return isLoading ? (
+      <Spinner />
+    ) : (
       <Switch>
         <Route path='/' exact component={App} />
         <Route path={routes.auth.login} exact component={Login} />
@@ -31,9 +38,13 @@ class Root extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  isLoading: state.auth.isLoading,
+});
+
 export default withRouter(
   connect(
-    null,
-    { setUser: authActions.setUser },
+    mapStateToProps,
+    { setUser: authActions.setUser, clearUser: authActions.clearUser },
   )(Root),
 );

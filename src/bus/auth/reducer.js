@@ -4,16 +4,21 @@ import { authActions } from './actions';
 
 const initialState = {
   currentUser: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 export const authReducer = handleActions(
   {
     [authActions.setUser]: (state, { payload }) => {
-      console.log(payload, 'PAYLOAD');
       return {
         ...state,
         currentUser: payload,
+        isLoading: false,
+      };
+    },
+    [authActions.clearUser]: state => {
+      return {
+        ...state,
         isLoading: false,
       };
     },
