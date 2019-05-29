@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-
+ 
 import { channelsActions } from './actions';
 
 const initialState = {
