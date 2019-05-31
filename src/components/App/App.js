@@ -10,16 +10,21 @@ import MetaPanel from './MetaPanel/MetaPanel';
 import './App.css';
 import { channelsActions } from '../../bus/channels/actions';
 
-const App = ({ currentUser, setCurrentChannel }) => {
+const App = ({ currentUser, setCurrentChannel, currentChannel }) => {
   return (
     <Grid columns='equal' className='app' style={{ background: '#eee' }}>
       <ColorPanel />
       <SidePanel
+        key={currentUser && currentUser.id}
         currentUser={currentUser}
         setCurrentChannel={setCurrentChannel}
       />
       <Grid.Column style={{ marginLeft: 520 }}>
-        <Messages />
+        <Messages
+          key={currentChannel && currentChannel.id}
+          currentChannel={currentChannel}
+          currentUser={currentUser}
+        />
       </Grid.Column>
       <Grid.Column width={4}>
         <MetaPanel />
@@ -33,6 +38,7 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
+  currentChannel: state.channels.currentChannel,
 });
 
 export default connect(
